@@ -1,0 +1,31 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+</head>
+
+<body>
+    <h1>Welcome to Patricia's Kitchen Employees Page</h1>
+    <br><br>
+    <h2>Hello, {{fullname}}</h2>
+    <div>
+        <p>{{signedUpFor}}<br><br> {{daysConfirmed}}
+            <br><br> {{daysFull}}
+            <br><br> Sign up for days for the coming week, or change your existing schedule below:<br>
+        </p>
+        <div class="checkbox">
+            <form class="" action="" method="post">
+                <input type="checkbox" name="weekDays" value="Sunday">Sunday<br>
+                <input type="checkbox" name="weekDays" value="Monday">Monday<br>
+                <input type="checkbox" name="weekDays" value="Tuesday">Tuesday<br>
+                <input type="checkbox" name="weekDays" value="Wednesday">Wednesday<br>
+                <input type="checkbox" name="weekDays" value="Thursday">Thursday<br>
+                <input type="checkbox" name="weekDays" value="Friday">Friday<br>
+                <input type="checkbox" name="weekDays" value="Saturday">Saturday<br><br>
+        </div>
+        <input type="submit" class="button" name="submitDays" value="Update days"><br><br>
+        <input type="submit" class="button logout" name="logOut" value="Log out"><br><br><br>
+        </form>
+    </div>
+
+
+
+</body>

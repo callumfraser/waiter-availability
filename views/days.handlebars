@@ -1,0 +1,36 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+</head>
+
+<body>
+    <h1>Welcome to Patricia's Kitchen Employees Page</h1>
+    <h2>Hello, Patricia :)</h1>
+    <div>
+      <p> Waiters available for the week </p>
+      <p class="sufficient key">Enough waiters for this day</p>
+      <p class="insufficient key">Still not enough waiters for this day</p>
+      <p class="none key">No waiters signed up for this day!</p>
+      <br><br>
+      <form class="" action="/days" method="post">
+        <input type="submit" class="submitButton button clearSchedule" value="Clear weekly schedule" name="clearButton"><br><br>
+      <table>
+        <tr>
+          {{#each NamesDays}}
+          <td class="{{sufficientStatus}}">{{day}}:<br>
+            <ul>
+              {{#each names}}
+              <li>{{this}}</li>
+              {{/each}}
+            </ul>
+           </td>
+           {{/each}}
+        </tr>
+      </table>
+    </div>
+      <br>
+    <input type="submit" class="logout button" value="Log out" name="logOut">
+
+
+    </form>
+
+</body>

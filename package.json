@@ -1,0 +1,36 @@
+{
+  "name": "waiter-avail",
+  "version": "1.0.0",
+  "description": "waiter availability app",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/callumfraser/waiter-avail.git"
+  },
+  "keywords": [
+    "waiter",
+    "life",
+    "respect"
+  ],
+  "author": "callumF",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/callumfraser/waiter-avail/issues"
+  },
+  "homepage": "https://github.com/callumfraser/waiter-avail#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "c": "^0.1.0",
+    "connect-flash": "^0.1.1",
+    "e": "0.0.4",
+    "express": "^4.15.2",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.15.2",
+    "handlebars": "^4.0.8",
+    "mongodb": "^2.2.26",
+    "mongoose": "^4.9.8"
+  }
+}
