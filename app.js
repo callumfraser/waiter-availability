@@ -157,18 +157,18 @@ app.get('/waiters/:username', function(req, res) {
                 for (var k = 0; k < result.length; k++) {
                     daysConfirmed.push(result[k].day);
                 }
-                if (daysConfirmed.length < daysChosen.length){
-                  var daysTaken = daysChosen.filter(function(val){
-                    return daysConfirmed.indexOf(val) == -1;
-                  });
-                  userMessage = "Your other chosen days (" + daysTaken + ") are already full."
+                if (daysConfirmed.length < daysChosen.length) {
+                    var daysTaken = daysChosen.filter(function(val) {
+                        return daysConfirmed.indexOf(val) == -1;
+                    });
+                    userMessage = "Your other chosen days (" + daysTaken + ") are already full."
                 }
             }
             res.render('waiters', {
                 fullname: fullname,
-                signedUpFor : waiterMsg,
+                signedUpFor: waiterMsg,
                 daysConfirmed,
-                daysFull : userMessage
+                daysFull: userMessage
             })
         })
     } else {
@@ -188,15 +188,15 @@ app.post('/waiters/:username', function(req, res) {
     var logOut = req.body.logOut;
     var submitDays = req.body.submitDays;
     if (submitDays) {
-      userMessage = "";
-      daysChosen = [];
+        userMessage = "";
+        daysChosen = [];
         if (username !== URLname) {
-          console.log(req.session.user);
-          console.log(req.params.username);
+            console.log(req.session.user);
+            console.log(req.params.username);
             message = "Days were not submitted as you were not logged in."
             res.redirect('/');
         } else {
-          console.log("god help me")
+            console.log("god help me")
             var wDays = req.body.weekDays;
             if (wDays == undefined) {
                 res.redirect('/waiters/' + username);
@@ -223,59 +223,58 @@ app.post('/waiters/:username', function(req, res) {
                         });
                 })
             }
-            if (wDays !== undefined){
-            if (wDays.constructor === Array) {
-                dayArray = wDays
-            } else {
-                dayArray = [wDays]
+            if (wDays !== undefined) {
+                if (wDays.constructor === Array) {
+                    dayArray = wDays
+                } else {
+                    dayArray = [wDays]
+                }
+
+                dayArray.forEach(function(dayW) {
+                    daysChosen.push(dayW);
+                    Days.findOne({
+                        day: dayW
+                    }, function(err, result) {
+                        if (err) {
+                            console.log(err)
+                        } else if (result) {
+                            if (result.names.length < 3) {
+                                var signedUpCheck = true;
+                                for (var y = 0; y < 3; y++) {
+                                    if (result.names[y] == fullname) {
+                                        signedUpCheck = false;
+                                    }
+                                }
+                                if (signedUpCheck == true) {
+                                    Days.update({
+                                            day: dayW
+                                        }, {
+
+                                            $push: {
+                                                "names": fullname
+                                            },
+                                        }, {
+                                            safe: true,
+                                            upsert: true
+                                        },
+                                        function(err, success) {
+                                            if (err) {
+                                                console.log(err);
+                                            } else {
+                                                console.log("successFULLLLL!")
+                                            }
+                                        })
+                                };
+                            }
+                        }
+                    });
+                })
             }
 
-            dayArray.forEach(function(dayW) {
-              daysChosen.push(dayW);
-                Days.findOne({
-                    day: dayW
-                }, function(err, result) {
-                    if (err) {
-                        console.log(err)
-                    } else if (result) {
-                        if (result.names.length < 3) {
-                            var signedUpCheck = true;
-                            for (var y = 0; y < 3; y++) {
-                                if (result.names[y] == fullname) {
-                                    signedUpCheck = false;
-                                }
-                            }
-                            if (signedUpCheck == true) {
-                                Days.update({
-                                        day: dayW
-                                    }, {
-
-                                        $push: {
-                                            "names": fullname
-                                        },
-                                    }, {
-                                        safe: true,
-                                        upsert: true
-                                    },
-                                    function(err, success) {
-                                        if (err) {
-                                            console.log(err);
-                                        } else {
-                                            console.log("successFULLLLL!")
-                                        }
-                                    })
-                            };
-                        }
-                    }
-                });
-            })
-}
-
-        setTimeout(function() {
-          console.log("do u know where u are");
-            res.redirect('/waiters/' + username);
-        }, 800)
-      }
+            setTimeout(function() {
+                res.redirect('/waiters/' + username);
+            }, 800)
+        }
     } else if (logOut) {
         daysChosen = [];
         signedUp = false;
@@ -294,37 +293,37 @@ app.get('/days', function(req, res) {
         var NamesDays = [{
                 day: "Sunday",
                 names: [],
-                sufficientStatus : ""
+                sufficientStatus: ""
             },
             {
                 day: "Monday",
                 names: [],
-                sufficientStatus : ""
+                sufficientStatus: ""
             },
             {
                 day: "Tuesday",
                 names: [],
-                sufficientStatus : ""
+                sufficientStatus: ""
             },
             {
                 day: "Wednesday",
                 names: [],
-                sufficientStatus : ""
+                sufficientStatus: ""
             },
             {
                 day: "Thursday",
                 names: [],
-                sufficientStatus : ""
+                sufficientStatus: ""
             },
             {
                 day: "Friday",
                 names: [],
-                sufficientStatus : ""
+                sufficientStatus: ""
             },
             {
                 day: "Saturday",
                 names: [],
-                sufficientStatus : ""
+                sufficientStatus: ""
             },
         ];
         Days.find({}, function(err, results) {
@@ -336,13 +335,13 @@ app.get('/days', function(req, res) {
                     console.log(weekNames.length);
                     for (var k = 0; k < 7; k++) {
                         if (schedule.day == daysOfWeek[k]) {
-                          if (weekNames.length == 3){
-                            NamesDays[k].sufficientStatus = "sufficient"
-                          } else if ((0 < weekNames.length) && (weekNames.length < 3)){
-                            NamesDays[k].sufficientStatus = "insufficient"
-                          } else if (weekNames.length == 0){
-                            NamesDays[k].sufficientStatus = "none"
-                          }
+                            if (weekNames.length == 3) {
+                                NamesDays[k].sufficientStatus = "sufficient"
+                            } else if ((0 < weekNames.length) && (weekNames.length < 3)) {
+                                NamesDays[k].sufficientStatus = "insufficient"
+                            } else if (weekNames.length == 0) {
+                                NamesDays[k].sufficientStatus = "none"
+                            }
                             weekNames.forEach(function(indivName) {
                                 NamesDays[k].names.push(indivName)
                             });
@@ -351,9 +350,11 @@ app.get('/days', function(req, res) {
                 })
             }
         })
-        res.render('days', {
-            NamesDays
-        })
+        setTimeout(function() {
+            res.render('days', {
+                NamesDays
+            })
+        }, 800)
     } else {
         res.render('failedLogin')
     }
