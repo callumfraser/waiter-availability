@@ -5,9 +5,9 @@ var app = express();
 var session = require('express-session');
 var message;
 var signedUp = false;
-var userMessage;
 var daysChosen = [];
 var regMsg;
+var daysTakenMsg = "";
 var fullname;
 var port = process.env.PORT || 3002;
 var mongoose = require('mongoose');
@@ -113,14 +113,18 @@ app.get('/register', function(req, res) {
 
 app.post('/register', function(req, res) {
     var username = req.body.username;
-    var password = req.body.password;
     var fullName = req.body.fullname;
+    var password = req.body.password;
+    var confirmPassword = req.body.confPass;
+    var register = req.body.register;
+    var cancel = req.body.cancel
 
     var newUser = new User();
     newUser.username = username.toLowerCase();
     newUser.password = password;
     newUser.fullname = fullName;
-
+if (register){
+if (confirmPassword == password){
     newUser.save(function(err, savedUser) {
         if (err) {
             console.log(err);
@@ -135,15 +139,33 @@ app.post('/register', function(req, res) {
             return;
         }
     });
+  } else {
+  regMsg = "Passwords did not match, please re-enter.";
+  res.redirect('/register')
+}
+} else if (cancel){
+  res.redirect('/')
+}
 })
 
 app.get('/waiters/:username', function(req, res) {
-
+    var daysCheck = [];
     var daysConfirmed = [];
     var submitDays = req.body.submitDays;
     var waiterMsg = "Not signed up for any days yet.";
     var username = req.params.username;
     if (username == req.session.user) {
+        Days.find({}, function(err, result) {
+            if (err) {
+                console.log(err)
+            }
+            result.forEach(function(dayCheck) {
+                if (dayCheck.names.length < 3) {
+                    daysCheck.push(dayCheck.day);
+                }
+            })
+        })
+
         Days.find({
             names: fullname
         }, function(err, result) {
@@ -152,23 +174,26 @@ app.get('/waiters/:username', function(req, res) {
             } else if (result) {
                 if (result.length > 0) {
                     signedUp = true;
-                    waiterMsg = "You are signed up to work these days:"
+                    waiterMsg = "You are signed up to work these days:";
+                    result.forEach(function(dayCheck) {
+                        daysConfirmed.push(dayCheck.day);
+                        if (daysCheck.indexOf(dayCheck.day) == -1) {
+                            daysCheck.push(dayCheck.day)
+                        }
+                    })
                 }
-                for (var k = 0; k < result.length; k++) {
-                    daysConfirmed.push(result[k].day);
-                }
-                if (daysConfirmed.length < daysChosen.length) {
-                    var daysTaken = daysChosen.filter(function(val) {
-                        return daysConfirmed.indexOf(val) == -1;
-                    });
-                    userMessage = "Your other chosen days (" + daysTaken + ") are already full."
-                }
+            }
+            if (daysCheck.length < 7){
+              daysTakenMsg = "Other days are already full for this week.";
+            } else {
+              daysTakenMsg = "";
             }
             res.render('waiters', {
                 fullname: fullname,
                 signedUpFor: waiterMsg,
                 daysConfirmed,
-                daysFull: userMessage
+                daysCheck,
+                daysTakenMsg
             })
         })
     } else {
@@ -182,13 +207,10 @@ app.post('/waiters/:username', function(req, res) {
     var URLname = req.params.username;
     console.log(username);
     console.log(URLname);
-
-
     var dayArray;
     var logOut = req.body.logOut;
     var submitDays = req.body.submitDays;
     if (submitDays) {
-        userMessage = "";
         daysChosen = [];
         if (username !== URLname) {
             console.log(req.session.user);
@@ -196,7 +218,6 @@ app.post('/waiters/:username', function(req, res) {
             message = "Days were not submitted as you were not logged in."
             res.redirect('/');
         } else {
-            console.log("god help me")
             var wDays = req.body.weekDays;
             if (wDays == undefined) {
                 res.redirect('/waiters/' + username);
@@ -238,34 +259,23 @@ app.post('/waiters/:username', function(req, res) {
                         if (err) {
                             console.log(err)
                         } else if (result) {
-                            if (result.names.length < 3) {
-                                var signedUpCheck = true;
-                                for (var y = 0; y < 3; y++) {
-                                    if (result.names[y] == fullname) {
-                                        signedUpCheck = false;
+                            Days.update({
+                                    day: dayW
+                                }, {
+                                    $push: {
+                                        "names": fullname
+                                    },
+                                }, {
+                                    safe: true,
+                                    upsert: true
+                                },
+                                function(err, success) {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        console.log("successFULLLLL!")
                                     }
-                                }
-                                if (signedUpCheck == true) {
-                                    Days.update({
-                                            day: dayW
-                                        }, {
-
-                                            $push: {
-                                                "names": fullname
-                                            },
-                                        }, {
-                                            safe: true,
-                                            upsert: true
-                                        },
-                                        function(err, success) {
-                                            if (err) {
-                                                console.log(err);
-                                            } else {
-                                                console.log("successFULLLLL!")
-                                            }
-                                        })
-                                };
-                            }
+                                })
                         }
                     });
                 })
@@ -281,7 +291,6 @@ app.post('/waiters/:username', function(req, res) {
         fullname = "";
         req.session.user = undefined;
         res.redirect('/')
-        userMessage = "";
     }
 
 })

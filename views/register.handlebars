@@ -4,14 +4,16 @@
 
 <body>
     <h1>Welcome to Patricia's Kitchen Employees Page</h1>
-    <div>
+    <div class="registerBox">
       <br>
       {{regMsg}}<br><br>
         <form class="" action="/register" method="post">
             Full name: <input type="text" name="fullname"><br><br>
             Username: <input type="text" name="username"><br><br>
-            Password: <input type="text" name="password" autocomplete="off"><br><br>
-            <input type="submit" class="button"name="register"value="Register">
+            Password: <input type="password" name="password" autocomplete="off"><br><br>
+            Confirm password: <input type="password" name="confPass" autocomplete="off"><br><br>
+            <input type="submit" class="button submitUser"name="register"value="Register"><br><br>
+            <input type="submit" class="button"name="cancel"value="Cancel">
         </form>
     </div>
 
