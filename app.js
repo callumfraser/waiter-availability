@@ -281,9 +281,9 @@ app.post('/waiters/:username', function(req, res) {
                 })
             }
 
-            setTimeout(function() {
+            // setTimeout(function() {
                 res.redirect('/waiters/' + username);
-            }, 800)
+            // }, 800)
         }
     } else if (logOut) {
         daysChosen = [];
@@ -359,11 +359,11 @@ app.get('/days', function(req, res) {
                 })
             }
         })
-        setTimeout(function() {
+        // setTimeout(function() {
             res.render('days', {
                 NamesDays
             })
-        }, 800)
+        // }, 800)
     } else {
         res.render('failedLogin')
     }
@@ -378,9 +378,9 @@ app.post('/days', function(req, res) {
                 console.log(err)
             }
         })
-        setTimeout(function() {
+        // setTimeout(function() {
             res.redirect('/days');
-        }, 500)
+        // }, 500)
     } else if (logOut) {
         req.session.user = undefined;
         res.redirect('/');
