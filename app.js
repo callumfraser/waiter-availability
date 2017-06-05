@@ -358,11 +358,11 @@ app.get('/days', function(req, res) {
                     }
                 })
             }
-        })
         // setTimeout(function() {
             res.render('days', {
                 NamesDays
             })
+          })
         // }, 800)
     } else {
         res.render('failedLogin')
