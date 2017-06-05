@@ -5,7 +5,6 @@ var app = express();
 var session = require('express-session');
 var message;
 var signedUp = false;
-var daysChosen = [];
 var regMsg;
 var daysTakenMsg = "";
 var fullname;
@@ -205,16 +204,11 @@ app.post('/waiters/:username', function(req, res) {
 
     var username = req.session.user;
     var URLname = req.params.username;
-    console.log(username);
-    console.log(URLname);
     var dayArray;
     var logOut = req.body.logOut;
     var submitDays = req.body.submitDays;
     if (submitDays) {
-        daysChosen = [];
         if (username !== URLname) {
-            console.log(req.session.user);
-            console.log(req.params.username);
             message = "Days were not submitted as you were not logged in."
             res.redirect('/');
         } else {
@@ -252,7 +246,6 @@ app.post('/waiters/:username', function(req, res) {
                 }
 
                 dayArray.forEach(function(dayW) {
-                    daysChosen.push(dayW);
                     Days.findOne({
                         day: dayW
                     }, function(err, result) {
@@ -280,13 +273,12 @@ app.post('/waiters/:username', function(req, res) {
                     });
                 })
             }
+            res.redirect('/waiters/' + username);
 
             // setTimeout(function() {
-                res.redirect('/waiters/' + username);
             // }, 800)
         }
     } else if (logOut) {
-        daysChosen = [];
         signedUp = false;
         fullname = "";
         req.session.user = undefined;
