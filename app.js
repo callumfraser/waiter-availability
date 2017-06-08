@@ -12,9 +12,13 @@ var port = process.env.PORT || 3002;
 var mongoose = require('mongoose');
 var Days = require('./lib/Days');
 var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+var orderOfDays = {Sunday: 1, Monday: 2, Tuesday: 3, Wednesday: 4, Thursday: 5, Friday: 6, Saturday: 7};
 var flash = require('connect-flash');
 var User = require('./lib/User');
 // console.log(user);
+var sortDays = function(a, b){
+  return orderOfDays[a] - orderOfDays[b]
+};
 
 var format = require('util').format;
 
@@ -159,11 +163,11 @@ app.get('/waiters/:username', function(req, res) {
                 console.log(err)
             }
             result.forEach(function(dayCheck) {
+              console.log(dayCheck.day);
                 if (dayCheck.names.length < 3) {
                     daysCheck.push(dayCheck.day);
                 }
             })
-        })
 
         Days.find({
             names: fullname
@@ -187,13 +191,17 @@ app.get('/waiters/:username', function(req, res) {
             } else {
               daysTakenMsg = "";
             }
+            var daysCheckOrdered = daysCheck.sort(sortDays);
+            var daysConfirmedOrdered = daysConfirmed.sort(sortDays);
+            console.log(daysCheckOrdered);
             res.render('waiters', {
                 fullname: fullname,
                 signedUpFor: waiterMsg,
-                daysConfirmed,
-                daysCheck,
+                daysConfirmed : daysConfirmedOrdered,
+                daysCheck : daysCheckOrdered,
                 daysTakenMsg
             })
+          })
         })
     } else {
         res.render('failedLogin')
