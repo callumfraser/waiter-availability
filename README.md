@@ -1,6 +1,6 @@
 # Waiter Availability Webapp - Patricia's Kitchen
 
-![Image Registration Numbers](https://images.template.net/wp-content/uploads/2015/10/12231210/Editable-Restaurant-Shift-Schedule-Template-Word-Doc.jpg)
+![Image Waiter Schedule](https://images.template.net/wp-content/uploads/2015/10/12231210/Editable-Restaurant-Shift-Schedule-Template-Word-Doc.jpg)
 * Register waiters on database with name, username and password fields.
 * Log in as waiters, choose and submit shifts for upcoming week.
 * Deny access to waiter and admin pages unless password/username combinations are correct.
@@ -64,11 +64,11 @@ How to [Install MongoDB](https://www.digitalocean.com/community/tutorials/how-to
   }
 ```
 
-To install all dependencies required for the app to run, on the terminal navigate to the registration_webapp folder, and type  ``` npm install --save``` .
+To install all dependencies required for the app to run, on the terminal navigate to the waiter-availability folder, and type  ``` npm install --save``` .
 
 ## Running the app locally
 
-* Open terminal and navigate to the registration_webapp directory. Once you are located in the root folder, type:
+* Open terminal and navigate to the waiter-availability directory. Once you are located in the root folder, type:
 
         $ nodemon or
         $ node index.js
